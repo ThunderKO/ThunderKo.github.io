@@ -3,7 +3,7 @@
     <head>  
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-      <title>MU Material : Blog Single</title>
+      <title>Andy Ko: Blog</title>
 
        <!-- CSS  -->      
       <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
@@ -14,7 +14,7 @@
       <!-- Owl Carousel -->
       <link rel="stylesheet" href="css/owl.carousel.css">
       <!-- Default Theme CSS File-->
-      <link id="switcher" href="css/themes/default-theme.css" type="text/css" rel="stylesheet" media="screen,projection"/>     
+      <link id="switcher" href="css/themes/lite-purple-theme.css" type="text/css" rel="stylesheet" media="screen,projection"/>     
       <!-- Main css File -->
       <link href="style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 
@@ -39,7 +39,7 @@
                 <!-- LOGO -->
 
                 <!-- TEXT BASED LOGO -->
-                <a href="index.html" class="brand-logo">MU Material</a>
+                <a href="index.html" class="brand-logo">Andy's Blog</a>
                 
                 <!-- Image Based Logo -->                
                  <!-- <a href="index.html" class="brand-logo"><img src="img/logo.jpeg" alt="logo img"></a>  -->
@@ -70,13 +70,13 @@
               </div>
               <div class="overlay-content">
                 <div class="container">
-                  <h1 class="header-title">Awesome Image Post Title</h1>
+                  <h1 class="header-title">教育管理系統(LMS)後端建構(一) – Moodle</h1>
                   <div class="meta-media">
                     <div class="single-meta">
                       Post By <a href="#">Admin</a>
                     </div>
                     <div class="single-meta">
-                      Category : <a href="#">Web/Design</a>,<a href="#">Graphics</a>
+                      Category : <a href="#">Web</a>,<a href="#">Server</a>
                     </div>
                     <div class="single-meta">
                       <a href="#" class="post-comment"><i class="material-icons">comment</i><span>15</span></a>
@@ -92,9 +92,112 @@
                 <div class="col s12 m8 l8">
                   <div class="blog-content">
                     <div class="blog-image">
-                      <img src="img/blog3.jpg"> 
+                      <img src="img/moodle-blog.png"> 
                     </div>
-                    <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable</p>
+                    <h2>前言</h2>
+                    <p>筆者也差不多從大學本科畢業了，讀書的時候總是從學校提供的網站去下載演講及導修筆記。對於畢業之後就沒有這樣的方便感到很可惜(其實是依賴了…呵呵)，所以就打算自己建構一個來自己一個用。不同的院校使用的教育管理系統(LMS)都不同，例如有：Moodle, BlackBoard, Canvas, 當然也有些學校的前端是學校自己建構的，這個我就不在這裏討論了(不過筆者非常歡迎讀者在下面留言還有什麼其他的LMS)。第一站就和大家討論一下Moodle的建構環節！</p>
+                    <h2>技術概覧</h2>
+                    <p>系統環境(OS Env.)              ：  Debian 9.5.0 <br>
+                      網絡伺服器(Web Server)   ：  Apache <br>
+                      數據庫管理系統(DBMS)     ：  MySQL<br>
+                      伺服器開發語言                   ：  PHP<br>
+                      
+                      筆者嘅選擇考慮了穩定性而且捨難取易，為求一步到位。因此選擇了Debian。Debian對比起Ubuntu更加輕量，發佈的版本亦經過針對建構伺服器的測試而且更新速度比較慢。因此減省了不少的維護時間，也比較方便。在後端的技術棧(Technology Stack)上，使用了被普遍使用的”LAMP棧”(Linux, Apache, MySQL, PHP)。因為筆者打算第一篇的建構是為初學者而設。在往後我們討論BlackBoard, Canvas的建構，會和大家嘗試不同的技術棧！～
+                      
+                    </p>
+                    <h2>第一步：“爬棧” (安裝LAMP棧)</h2>
+                    <p>1. 下載MySQL和Apache配置軟件。</p>
+                    <blockquote><i>wget https://dev.mysql.com/get/mysql-apt-config_0.8.6-1_all.deb mysql-apt-config_0.8.6-1_all.deb <br>
+
+                        apt-get install gdebi-core <br>
+                        
+                        gdebi mysql-apt-config_0.8.6-1_all.deb<br>
+                        
+                        apt-get update</i>></blockquote>
+                    <p>2. 下載”LAMP棧”。</p>
+                    <blockquote><i>apt-get install apache2 php7.1 mysql-server php7.1-mysql libapache2-mod-php7.1 php7.1-gd php7.1-curl php7.1-xmlrpc php7.1-intl php7.1-zip php7.1-mbstring</i></blockquote>
+                    <p>3. 修正PHP配置檔案。</p>
+                    <blockquote><i>
+                        nano /etc/php/7.1/apache2/php.ini<br>
+                        【加以下的代碼】<br>
+                        extension=mysql.so<Br>
+                        extension=gd.so<br>
+                    </i></blockquote>
+                    4. 檢查及除錯目前的進度。
+                    <blockquote><i>
+                        /etc/init.d/apache2 restart<br>
+
+                        【打開瀏覽器在網址打localhost】
+                    </i></blockquote>
+                    <h2>第二步：“攻棧” (建構MySQL數據庫管理系統)</h2>
+                    <p>1. 建立MySQL管理員(admin)。<br>
+
+                        <blockquote><i>mysqladmin -u root password “破解不了的密碼"</i></blockquote><br>
+                        
+                        2. 登錄MySQL。<br>
+                        
+                    <blockquote><i>mysql -u root -p</i></blockquote><br>
+                        
+                        3. 建立Moodle數據庫及更新。<br>
+                        
+                        <blockquote><i>mysql> CREATE DATABASE moodle CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;</i><br>
+                        
+                        <i>mysql> exit;</i><br>
+                        
+                    <i>/etc/init.d/mysql restart</i></blockquote>
+                    <h2>第三步：“登頂” (配置Moodle前端)</h2>
+                    <p>1.下載<a href="https://download.moodle.org/download.php/stable35/moodle-latest-35.tgz">Moodle</a>。(筆記是下載Moodle3.5.0的tar檔案)<br>
+
+                        2. 解壓縮Moodle。</p>
+                        <blockquote><i>
+                            cd /home/你的用戶名稱/Downloads<br>
+
+                            tar -zxvf moodle-lastest-35
+                        </i></blockquote>
+                        <p>3. 瀏覽去檔案的位置並建構Moodle檔案架構。</p>
+                        <blockquote><i>
+                            cd/var/www<br>
+
+                            mkdir moodledata<br>
+                            
+                            chmod -R 755 moodle<Br>
+                            
+                            chmod -R 755 moodledata
+                        </i></blockquote>
+                        <h2>第四步：“觀空” (配置Moodle到Apache網頁)</h2>
+                        <p>1. 修改Apache檔案。</p>
+                        <blockquote><i>
+                            cd/var/www<br>
+
+                            nano /etc/apache2/sites-available/default<br>
+                            
+                            【去第四行，改成】<br>
+                            
+                            DocumentRoot “/var/www/moodle"<br>
+                            
+                            【去第十行，改成】<br>
+                            
+                            Directory “/var/www/moodle"<br>
+                            
+                            【去第十七行，改成】<br>
+                            
+                            # RedirectMatch ^/$ /apache2-default/<br>
+                            
+                            /etc/init.d/apache2 restart
+                        </i></blockquote>
+                        <h2>第五步：“望月” (從前端配置Moodle)</h2>
+                        <p>1. 瀏覽"http://locahost:moodle"。<br>
+
+                            2. 因為只是跟大家討論，所以筆者就不在這裏跟大家展現把配置好的系統掛在網域DNS裏。</p>
+                            <h2>第六步：“再遇圓月” (配置更新系統)</h2>
+                            <p>1. 因為Moodle需要一個時間性的功能(function)去進行維護或更新。筆者就打算把每次的維護時間設定為十分鐘。</p>
+                            <blockquote><i>
+                                crontab -u www-data -e<br>
+
+                                */10 * * * * /usr/bin/php /var/www/moodle/admin/cli/cron.php >/dev/null                                
+                            </i></blockquote>
+                            <p>最後你就能把你的演講及導修筆記都放在Moodle了。</p>
+                    <!-- <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable</p>
                     <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable</p>
                     <h1>Header One</h1>
                     <h2>Header Two</h2>
@@ -178,7 +281,7 @@
                       <li>List item two</li>
                       <li>List item three</li>
                       <li>List item four</li>
-                    </ol>
+                    </ol> -->
                     <!-- Start Blog Content Bottom -->
                     <div class="blog-content-bottom">
                       <div class="row">
@@ -231,27 +334,27 @@
                           <div class="col s12 m6 l6">
                             <div class="card">
                               <div class="card-image">
-                                <img src="img/blog1.jpg">     
+                                <img src="img/moodle-blog.png">     
                               </div>
                               <div class="card-content blog-post-content">
-                                <h2><a href="#">Awesome Post Title</a></h2>
+                                <h2><a href="blog-single.html">教育管理系統(LMS)後端建構(一) – MOODLE</a></h2>
                                 <div class="meta-media">
                                   <div class="single-meta">
                                     Post By <a href="#">Admin</a>
                                   </div>
                                   <div class="single-meta">
-                                    Category : <a href="#">Web/Design</a>
+                                    Category : <a href="#">Web/Server</a>
                                   </div>
                                 </div>
-                                <p>The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here.</p>
+                                <p>筆者也差不多從大學本科畢業了，讀書的時候總是從學校提供的網站去下載演講及導修筆記...</p>
                               </div>
                               <div class="card-action">
-                                <a href="#" class="post-comment"><i class="material-icons">comment</i><span>15</span></a>
-                                <a href="#" class="readmore-btn">Read More</a>
+                                <a href="blog-single.html" class="post-comment"><i class="material-icons">comment</i><span>15</span></a>
+                                <a href="blog-single.html" class="readmore-btn">Read More</a>
                               </div>
                             </div>
                           </div>
-                          <div class="col s12 m6 l6">
+                          <!-- <div class="col s12 m6 l6">
                             <div class="card">
                               <div class="card-image">
                                 <img src="img/blog1.jpg">     
@@ -273,7 +376,7 @@
                                 <a href="#" class="readmore-btn">Read More</a>
                               </div>
                             </div>
-                          </div>
+                          </div> -->
                         </div>
                       </div>
                     </div>
@@ -282,23 +385,23 @@
                   <div class="row">
                     <div class="col s12">
                       <div class="comments-area">
-                        <h3 class="comments-title">5 Comments</h3>
+                        <h3 class="comments-title">1 Comments</h3>
                         <div class="comments">
                           <ul class="commentlist">
                             <li>
                               <div class="media">
                                 <div class="media-left">    
-                                  <img class="media-object news-img" src="img/profile-img1.jpg" alt="img">      
+                                  <img class="media-object news-img" src="img/eduhk-icon.png" alt="img">      
                                 </div>
                                 <div class="media-body">
-                                 <h4 class="author-name">Dr. Jack Johnson</h4>
-                                 <span class="comments-date"> May 16, 2015 / 10:29 am</span>
-                                 <p>Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English</p>
+                                 <h4 class="author-name">Andy Ko</h4>
+                                 <span class="comments-date"> May 16, 2018 / 10:29 am</span>
+                                 <p>Looking forward to the next chapter!</p>
                                  <a href="#" class="reply-btn">Reply</a>
                                 </div>
                               </div>
                             </li>
-                            <li>
+                            <!-- <li>
                               <div class="media">
                                 <div class="media-left">    
                                   <img class="media-object news-img" src="img/profile-img1.jpg" alt="img">      
@@ -353,7 +456,7 @@
                                  <a href="#" class="reply-btn">Reply</a>
                                 </div>
                               </div>
-                            </li>
+                            </li> -->
                           </ul>
                         </div>
                       </div>
@@ -383,15 +486,15 @@
                       <!-- Single Recent News -->
                       <div class="recent-news">
                         <div class="recent-img">
-                          <a href="blog-single.html"><img src="img/blog1.jpg" alt="img"></a>
+                          <a href="blog-single.html"><img src="img/moodle-blog.png" alt="img"></a>
                         </div>
                         <div class="recent-body">
-                          <h4><a href="blog-single.html">Recent News Title</a></h4>
-                          <p>The point of using Lorem Ipsum is that it has a more-or-less normal.</p>
+                          <h4><a href="blog-single.html">教育管理系統(LMS)後端建構(一) – MOODLE</a></h4>
+                          <p>筆者也差不多從大學本科畢業了，讀書的時候總是從學校提供的網站去下載演講及導修筆記...</p>
                         </div>
                       </div>
                       <!-- Single Recent News -->
-                      <div class="recent-news">
+                      <!-- <div class="recent-news">
                         <div class="recent-img">
                           <a href="blog-single.html"><img src="img/blog2.jpg" alt="img"></a>
                         </div>
@@ -399,9 +502,9 @@
                           <h4><a href="blog-single.html">Recent News Title</a></h4>
                           <p>The point of using Lorem Ipsum is that it has a more-or-less normal.</p>
                         </div>
-                      </div>
+                      </div> -->
                       <!-- Single Recent News -->
-                      <div class="recent-news">
+                      <!-- <div class="recent-news">
                         <div class="recent-img">
                           <a href="blog-single.html"><img src="img/blog3.jpg" alt="img"></a>
                         </div>
@@ -410,7 +513,7 @@
                           <p>The point of using Lorem Ipsum is that it has a more-or-less normal.</p>
                         </div>
                       </div>
-                    </div>
+                    </div> -->
                     <!-- Start Single Sidebar -->
                     <div class="single-sidebar">
                       <h3>Categories</h3>
@@ -454,12 +557,12 @@
                      <!-- Start Single Sidebar -->
                     <div class="single-sidebar">
                       <h3>Important links</h3>                      
-                      <ul>
+                      <!-- <ul>
                         <li><a href="#">Login</a></li>
                         <li><a href="#">Link One</a></li>
                         <li><a href="#">Link Two</a></li>
                         <li><a href="#">Link Three</a></li>
-                      </ul>
+                      </ul> -->
                     </div>
                   </aside>
                 </div>
