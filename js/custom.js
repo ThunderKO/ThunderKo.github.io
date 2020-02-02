@@ -1,216 +1,237 @@
-/**	
-	* Template Name: MU Material
-	* Version: 1.0	
-	* Template Scripts
-	* Author: MarkUps
-	* Author URI: http://www.markups.io/
-
-	Custom JS
-	
-	1. MOBILE MENU
-	2. EXPERIENCE SLIDER (Owl Carousel)
-	3. EDUCATION SLIDER (Owl Carousel)
-	4. PORTFOLIO SLIDER
-	5. COUNTER
-	6. TESTIMONIAL SLIDER (Owl Carousel)	
-	7. MENU SMOOTH SCROLLING
-	8. PRELOADER
-	9. CALL TO ABOUT
-	10. BOTTOM TO UP 
-	11. PARALLAX HEADER
-	12. HIRE ME SCROLL
-	
-	
+/**
+Core script to handle the entire theme and core functions
 **/
-
-jQuery(function($){
-
-
-	/* ----------------------------------------------------------- */
-	/*  1. Mobile MENU
-	/* ----------------------------------------------------------- */
-
-    jQuery(".button-collapse").sideNav();
-    
-	/* ----------------------------------------------------------- */
-	/*  2. Experience SLider(Owl Carousel)
-	/* ----------------------------------------------------------- */
-
-	var owl = $("#owl-carousel"); 
-    owl.owlCarousel({
-        items : 4, //4 items above 1024px browser width
-        itemsDesktop : [1024,3], //3 items between 1024px and 901px
-        itemsDesktopSmall : [900,2], // betweem 900px and 601px
-        itemsTablet: [600,1], //1 items between 600 and 0
-        itemsMobile : 1 // itemsMobile disabled - inherit from itemsTablet option
-    });
-    // Slide Navigation
-    jQuery(".next").click(function(){
-        owl.trigger('owl.next');
-    });
-
-    jQuery(".prev").click(function(){
-        owl.trigger('owl.prev');
-    });
-
-
-    /* ----------------------------------------------------------- */
-	/*  3. EDUCATION SLIDER (Owl Carousel)
-	/* ----------------------------------------------------------- */
-
-	var owl1 = $("#owl-carousel1"); 
-	owl1.owlCarousel({
-	    items : 4, //4 items above 1024px browser width
-	    itemsDesktop : [1024,3], //3 items between 1024px and 901px
-	    itemsDesktopSmall : [900,2], // betweem 900px and 601px
-	    itemsTablet: [600,1], //1 items between 600 and 0
-	    itemsMobile : 1 // itemsMobile disabled - inherit from itemsTablet option
-	});
-	// Slide Navigation
-	jQuery(".next1").click(function(){
-	    owl1.trigger('owl.next');
-	});
-
-	jQuery(".prev1").click(function(){
-	    owl1.trigger('owl.prev');
-	});
+var Frost = function(){
+	/* Search Bar ============ */
+	var screenWidth = $( window ).width();
 	
-    /* ----------------------------------------------------------- */
-	/*  4. PORTFOLIO SLIDER
-	/* ----------------------------------------------------------- */
-
-	jQuery('#portfolio-list').mixItUp();	
-
-	/* ----------------------------------------------------------- */
-	/*  5. COUNTER
-	/* ----------------------------------------------------------- */
-
-	jQuery('.counter').counterUp({
-        delay: 10,
-        time: 1000
-    });	  
-
-	/* ----------------------------------------------------------- */
-	/*  6. TESTIMONIAL SLIDER (Owl Carousel)
-	/* ----------------------------------------------------------- */
-
-	var owl2 = $("#owl-carousel2"); 
-    owl2.owlCarousel({
-        items : 2, //4 items above 1024px browser width
-        itemsDesktop : [1024,2], //3 items between 1024px and 901px
-        itemsDesktopSmall : [900,2], // betweem 900px and 601px
-        itemsTablet: [600,1], //1 items between 600 and 0
-        itemsMobile : 1 // itemsMobile disabled - inherit from itemsTablet option
-    });
-
-    // Slide Navigation
-    jQuery(".next2").click(function(){
-        owl2.trigger('owl.next');
-    });
-
-    jQuery(".prev2").click(function(){
-        owl2.trigger('owl.prev');
-    });
-	 
-
-	/* ----------------------------------------------------------- */
-	/*  7. MENU SMOOTH SCROLLING
-	/* ----------------------------------------------------------- */ 
+	/* Countdown ============ */
+	var handleCountDown = function(WebsiteLaunchDate){
+		/* Time Countr Down Js */
+		if($(".countdown").length)
+		{
+			$('.countdown').countdown({date: WebsiteLaunchDate+' 23:5'}, function() {
+				$('.countdown').text('we are live');
+			});
+		}
+		/* Time Countr Down Js End */
+	}
 	
-	//MENU SCROLLING WITH ACTIVE ITEM SELECTED
-
-	// Cache selectors
-	var lastId,
-	topMenu = $(".menu-scroll"),
-	topMenuHeight = topMenu.outerHeight()+13,
-	// All list items
-	menuItems = topMenu.find("a"),
-	// Anchors corresponding to menu items
-	scrollItems = menuItems.map(function(){
-	  var item = $($(this).attr("href"));
-	  if (item.length) { return item; }
-	});
-
-	// Bind click handler to menu items
-	// so we can get a fancy scroll animation
-	menuItems.click(function(e){
-	  var href = $(this).attr("href"),
-	      offsetTop = href === "#" ? 0 : $(href).offset().top-topMenuHeight+15;
-	  jQuery('html, body').stop().animate({ 
-	      scrollTop: offsetTop
-	  }, 900);
-	  e.preventDefault();
-	});
-
-	// Bind to scroll
-	jQuery(window).scroll(function(){
-	   // Get container scroll position
-	   var fromTop = $(this).scrollTop()+topMenuHeight;
-	   
-	   // Get id of current scroll item
-	   var cur = scrollItems.map(function(){
-	     if ($(this).offset().top < fromTop)
-	       return this;
-	   });
-	   // Get the id of the current element
-	   cur = cur[cur.length-1];
-	   var id = cur && cur.length ? cur[0].id : "";
-	   
-	   if (lastId !== id) {
-	       lastId = id;
-	       // Set/remove active class
-	       menuItems
-	         .parent().removeClass("active")
-	         .end().filter("[href=#"+id+"]").parent().addClass("active");
-	   }           
-	})
-    
-	/* ----------------------------------------------------------- */
-	/*  8. PRELOADER 
-	/* ----------------------------------------------------------- */ 
-
-	jQuery(window).load(function() { // makes sure the whole site is loaded
-      $('.progress').fadeOut(); // will first fade out the loading animation
-      $('#preloader').delay(100).fadeOut('slow'); // will fade out the white DIV that covers the website.
-      $('body').delay(100).css({'overflow':'visible'});
-    })
-	  
-	/* ----------------------------------------------------------- */
-	/* 9. CALL TO ABOUT
-	/* ----------------------------------------------------------- */ 
 	
-	jQuery(".call-to-about").click(function() {
-    jQuery('html,body').animate({
-        scrollTop: $("#about").offset().top},
-        'slow');
-	});
-
-	/* ----------------------------------------------------------- */
-	/* 10. BOTTOM TO UP
-	/* ----------------------------------------------------------- */ 
-
-	jQuery(".up-btn").click(function() {
-    jQuery('html,body').animate({
-        scrollTop: $("#header").offset().top},
-        'slow');
-	});
-
-	/* ----------------------------------------------------------- */
-	/* 11. PARALLAX HEADER
-	/* ----------------------------------------------------------- */ 
-
-	jQuery('.parallax').parallax();
-
-	/* ----------------------------------------------------------- */
-	/* 12. HIRE ME SCROLL
-	/* ----------------------------------------------------------- */ 
-
-	jQuery(".hire-me-btn").click(function(e) {
-		e.preventDefault();
-    jQuery('html,body').animate({
-        scrollTop: $("#footer").offset().top},
-        'slow');
-	});
-
+	var handleCustomScroll = function(){
+		/* all available option parameters with their default values */
+		if($(".content").length > 0)
+		{ 
+			if($(".content").hasClass('scroll-off'))
+			{
+				if(screenWidth > 900)
+				{
+					$(".content").mCustomScrollbar({
+						setWidth:false,
+						setHeight:false,
+						axis:"y"
+					});	
+				}					
+			}
+			else
+			{
+				$(".content").mCustomScrollbar({
+					setWidth:false,
+					setHeight:false,
+					axis:"y"
+				});	
+			}
+			
+			//screenWidth
+			
+		}
+	}
 	
+	var kenburnSlider = function(){
+		if($("#kenburn").length > 0)
+		{ 
+			$("#kenburn").slippry({
+				 transition: 'kenburns',
+				 useCSS: true,
+				 speed: 8000,
+				 pause: 3000,
+				 auto: true,
+				 preload: 'visible',
+				 autoHover: false
+			});
+		}
+	}
+	
+	var parallex = function(){
+		if($(".parallax").length > 0)
+		{ 
+			var currentX = '';
+			var currentY = '';
+			var movementConstant = .015;
+			$(document).on('mousemove',function(e) {
+				  if(currentX == '') currentX = e.pageX;
+				  var xdiff = e.pageX - currentX;
+				  currentX = e.pageX;
+				   if(currentY == '') currentY = e.pageY;
+				  var ydiff = e.pageY - currentY;
+				  currentY = e.pageY; 
+				  $('.parallax div').each(function(i, el) {
+					  var movement = (i + 1) * (xdiff * movementConstant);
+					  var movementy = (i + 1) * (ydiff * movementConstant);
+					  var newX = $(el).position().left + movement;
+					  var newY = $(el).position().top + movementy;
+					  $(el).css('left', newX + 'px');
+					  $(el).css('top', newY + 'px');
+				  });
+			});
+		}
+	}
+	
+	var handleSideBarMenu = function(){
+		
+		jQuery('.openbtn').on('click',function(){
+			jQuery('.about-sidebox').addClass('active');
+			
+		});
+		jQuery('.closebtn').on('click',function(){
+			jQuery('.about-sidebox').removeClass('active');
+			
+		});
+		jQuery('.map-btn').on('click',function(){
+			jQuery('.map-box').toggleClass('active');
+		});
+		
+		jQuery('.menu-btn a').on('click',function(){
+			jQuery('.menuleft').addClass('active');
+			
+		});
+		jQuery('.menuleft .close-btn').on('click',function(){
+			jQuery('.menuleft').removeClass('active');
+			
+		});
+		
+	}
+		
+	/* Website Launch Date */ 
+	var WebsiteLaunchDate = new Date();
+	monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+	WebsiteLaunchDate.setMonth(WebsiteLaunchDate.getMonth() + 1);
+	
+	WebsiteLaunchDate =  WebsiteLaunchDate.getDate() + " " + monthNames[WebsiteLaunchDate.getMonth()] + " " + WebsiteLaunchDate.getFullYear(); 
+	/* Website Launch Date END */ 
+	
+	
+	/* WOW ANIMATION ============ */
+	var wow_animation = function(){
+		if($('.wow').length > 0)
+		{
+			var wow = new WOW(
+			{
+			  boxClass:     'wow',      // animated element css class (default is wow)
+			  animateClass: 'animated', // animation css class (default is animated)
+			  offset:       -200,          // distance to the element when triggering the animation (default is 0)
+			  mobile:       false       // trigger animations on mobile devices (true is default)
+			});
+			wow.init();	
+		}	
+	}
+	
+	
+	var handlePlaceholderAnimation = function()
+	{
+		if(jQuery('.dezPlaceAni').length)
+		{
+		
+			$('.dezPlaceAni input, .dezPlaceAni textarea').on('focus',function(){
+			  $(this).parents('.form-group, .news-box').addClass('focused');
+			});
+			
+			$('.dezPlaceAni input, .dezPlaceAni textarea').on('blur',function(){
+			  var inputValue = $(this).val();
+			  if ( inputValue == "" ) {
+				$(this).removeClass('filled');
+				$(this).parents('.form-group, .news-box').removeClass('focused');  
+			  } else {
+				$(this).addClass('filled');
+			  }
+			})
+		}
+	}
+	
+	/* Masonry Box ============ */
+	var masonryBox = function(){
+		'use strict';
+		/* masonry by */
+		if(jQuery('#masonry, .masonry').length)
+		{
+			var self = $("#masonry, .masonry");
+			if(jQuery('.card-container').length)
+		    {
+				self.imagesLoaded(function () {
+					self.masonry({
+						gutterWidth: 15,
+						isAnimated: true,
+						itemSelector: ".card-container"
+					});
+				});
+			}
+		}
+		/* masonry by end */
+	}
+	
+	/* Light Gallery ============ */
+	var lightGallery = function (){
+		if(($('#lightgallery, .lightgallery').length > 0)){
+			$('#lightgallery, .lightgallery').lightGallery({
+				selector : '.check-km',
+				loop:true,
+				thumbnail:true,
+				exThumbImage: 'data-exthumbimage'
+			});
+		}
+	}
+	
+	var reposition = function (){
+		'use strict';
+		var modal = jQuery(this),
+		dialog = modal.find('.modal-dialog');
+		modal.css('display', 'block');
+		
+		/* Dividing by two centers the modal exactly, but dividing by three 
+		 or four works better for larger screens.  */
+		dialog.css("margin-top", Math.max(0, (jQuery(window).height() - dialog.height()) / 2));
+	}
+	
+	/* Function ============ */
+	return {
+		init:function(){
+			masonryBox();
+			wow_animation();
+			handleCountDown(WebsiteLaunchDate);
+			handleSideBarMenu();
+			handlePlaceholderAnimation();
+			lightGallery();
+			kenburnSlider();
+			parallex();
+			jQuery('.modal').on('show.bs.modal', reposition);
+		},
+		load:function(){
+			handleCustomScroll();
+		},
+	}
+	
+}();
+
+/* Document.ready Start */	
+jQuery(document).ready(function() {
+  Frost.init();
 });
+/* Document.ready END */
+/* Window Load START */
+jQuery(window).on("load", function (e) {
+	Frost.load();
+	setTimeout(function(){
+		jQuery('#loading-area').remove();
+	}, 0);
+});
+/*  Window Load END */
